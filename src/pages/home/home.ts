@@ -17,13 +17,12 @@ export class HomePage {
    * @public
    * @description     Used to store returned PHP data
    */
-  public items : Array<any> = [];
+  public items: Array<any> = [];
 
 
 
   constructor(public navCtrl: NavController,
-              public http   : HttpClient)
-  {
+              public http: HttpClient) {
 
   }
 
@@ -38,8 +37,7 @@ export class HomePage {
    * @method ionViewWillEnter
    * @return {None}
    */
-  ionViewWillEnter() : void
-  {
+  ionViewWillEnter(): void {
     this.load();
   }
 
@@ -55,17 +53,14 @@ export class HomePage {
    * @method load
    * @return {None}
    */
-  load() : void
-  {
+  load(): void {
     this.http
       .get('http://localhost/retrieve-data.php')
-      .subscribe((data : any) =>
-        {
+      .subscribe((data: any) => {
           console.dir(data);
           this.items = data;
         },
-        (error : any) =>
-        {
+        (error: any) => {
           console.dir(error);
         });
   }
@@ -80,8 +75,7 @@ export class HomePage {
    * @method addEntry
    * @return {None}
    */
-  addEntry() : void
-  {
+  addEntry(): void {
     this.navCtrl.push('AddTechnologyPage');
   }
 
@@ -98,8 +92,8 @@ export class HomePage {
    * @param param 		{any} 			Navigation data to send to the next page
    * @return {None}
    */
-  viewEntry(param : any) : void
-  {
+  viewEntry(param: any): void {
+    console.log(param);
     this.navCtrl.push('AddTechnologyPage', param);
   }
 

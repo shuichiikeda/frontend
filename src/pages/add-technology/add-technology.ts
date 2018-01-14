@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
@@ -19,7 +19,7 @@ export class AddTechnologyPage {
    * @public
    * @description     Define FormGroup property for managing form validation / data retrieval
    */
-  public form                   : FormGroup;
+  public form: FormGroup;
 
 
 
@@ -30,7 +30,7 @@ export class AddTechnologyPage {
    * @public
    * @description     Model for managing technologyName field
    */
-  public technologyName         : any;
+  public technologyName: any;
 
 
 
@@ -41,7 +41,7 @@ export class AddTechnologyPage {
    * @public
    * @description     Model for managing technologyDescription field
    */
-  public technologyDescription  : any;
+  public technologyDescription: any;
 
 
 
@@ -52,7 +52,7 @@ export class AddTechnologyPage {
    * @public
    * @description     Flag to be used for checking whether we are adding/editing an entry
    */
-  public isEdited               : boolean = false;
+  public isEdited: boolean = false;
 
 
 
@@ -63,7 +63,7 @@ export class AddTechnologyPage {
    * @public
    * @description     Flag to hide the form upon successful completion of remote operation
    */
-  public hideForm               : boolean = false;
+  public hideForm: boolean = false;
 
 
 
@@ -74,7 +74,7 @@ export class AddTechnologyPage {
    * @public
    * @description     Property to help set the page title
    */
-  public pageTitle              : string;
+  public pageTitle: string;
 
 
 
@@ -85,7 +85,7 @@ export class AddTechnologyPage {
    * @public
    * @description     Property to store the recordID for when an existing entry is being edited
    */
-  public recordID               : any      = null;
+  public recordID: any = null;
 
 
 
@@ -96,23 +96,22 @@ export class AddTechnologyPage {
    * @public
    * @description     Remote URI for retrieving data from and sending data to
    */
-  private baseURI               : string  = "http://localhost/";
+  private baseURI: string  = 'http://localhost/';
 
 
 
 
   // Initialise module classes
-  constructor(public navCtrl    : NavController,
-              public http       : HttpClient,
-              public NP         : NavParams,
-              public fb         : FormBuilder,
-              public toastCtrl  : ToastController)
-  {
+  constructor(public navCtrl: NavController,
+              public http: HttpClient,
+              public NP: NavParams,
+              public fb: FormBuilder,
+              public toastCtrl: ToastController) {
 
     // Create form builder validation rules
     this.form = fb.group({
-      "name"                  : ["", Validators.required],
-      "description"           : ["", Validators.required]
+      'name': ['', Validators.required],
+      'description': ['', Validators.required]
     });
   }
 
@@ -128,20 +127,16 @@ export class AddTechnologyPage {
    * @method ionViewWillEnter
    * @return {None}
    */
-  ionViewWillEnter() : void
-  {
+  ionViewWillEnter(): void {
     this.resetFields();
 
-    if(this.NP.get("record"))
-    {
-      this.isEdited      = true;
-      this.selectEntry(this.NP.get("record"));
-      this.pageTitle     = 'Amend entry';
-    }
-    else
-    {
-      this.isEdited      = false;
-      this.pageTitle     = 'Create entry';
+    if (this.NP.get('record')) {
+      this.isEdited = true;
+      this.selectEntry(this.NP.get('record'));
+      this.pageTitle = 'Amend entry';
+    } else {
+      this.isEdited = false;
+      this.pageTitle = 'Create entry';
     }
   }
 
@@ -157,11 +152,10 @@ export class AddTechnologyPage {
    * @param item 		{any} 			Navigation data
    * @return {None}
    */
-  selectEntry(item : any) : void
-  {
-    this.technologyName        = item.name;
+  selectEntry(item: any): void {
+    this.technologyName = item.name;
     this.technologyDescription = item.description;
-    this.recordID              = item.id;
+    this.recordID = item.id;
   }
 
 
@@ -177,21 +171,18 @@ export class AddTechnologyPage {
    * @param description 	{String} 			Description value from form field
    * @return {None}
    */
-  createEntry(name : string, description : string) : void
-  {
-    let headers 	: any		= new HttpHeaders({ 'Content-Type': 'application/json' }),
-      options 	: any		= { "key" : "create", "name" : name, "description" : description },
-      url       : any      	= this.baseURI + "manage-data.php";
+  createEntry(name: string, description: string): void {
+    let headers: any = new HttpHeaders({ 'Content-Type': 'application/json' }),
+      options: any = { 'key' : 'create', 'name' : name, 'description' : description },
+      url: any = this.baseURI + 'manage-data.php';
 
     this.http.post(url, JSON.stringify(options), headers)
-      .subscribe((data : any) =>
-        {
+      .subscribe((data: any) => {
           // If the request was successful notify the user
           this.hideForm   = true;
           this.sendNotification(`Congratulations the technology: ${name} was successfully added`);
         },
-        (error : any) =>
-        {
+        (error: any) => {
           this.sendNotification('Something went wrong!');
         });
   }
@@ -210,22 +201,19 @@ export class AddTechnologyPage {
    * @param description 	{String} 			Description value from form field
    * @return {None}
    */
-  updateEntry(name : string, description : string) : void
-  {
-    let headers 	: any		= new HttpHeaders({ 'Content-Type': 'application/json' }),
-      options 	: any		= { "key" : "update", "name" : name, "description" : description, "recordID" : this.recordID},
-      url       : any      	= this.baseURI + "manage-data.php";
+  updateEntry(name: string, description: string): void {
+    let headers: any = new HttpHeaders({ 'Content-Type': 'application/json' }),
+      options: any = { 'key' : 'update', 'name' : name, 'description' : description, 'recordID' : this.recordID},
+      url: any = this.baseURI + 'manage-data.php';
 
     this.http
       .post(url, JSON.stringify(options), headers)
-      .subscribe(data =>
-        {
+      .subscribe(data => {
           // If the request was successful notify the user
           this.hideForm  =  true;
           this.sendNotification(`Congratulations the technology: ${name} was successfully updated`);
         },
-        (error : any) =>
-        {
+        (error: any) => {
           this.sendNotification('Something went wrong!');
         });
   }
@@ -242,22 +230,19 @@ export class AddTechnologyPage {
    * @method deleteEntry
    * @return {None}
    */
-  deleteEntry() : void
-  {
-    let name      : string 	= this.form.controls["name"].value,
-      headers 	: any		= new HttpHeaders({ 'Content-Type': 'application/json' }),
-      options 	: any		= { "key" : "delete", "recordID" : this.recordID},
-      url       : any      	= this.baseURI + "manage-data.php";
+  deleteEntry(): void {
+    let name: string = this.form.controls['name'].value,
+      headers: any = new HttpHeaders({ 'Content-Type': 'application/json' }),
+      options: any = { 'key' : 'delete', 'recordID' : this.recordID},
+      url: any = this.baseURI + 'manage-data.php';
 
     this.http
       .post(url, JSON.stringify(options), headers)
-      .subscribe(data =>
-        {
+      .subscribe(data => {
           this.hideForm     = true;
           this.sendNotification(`Congratulations the technology: ${name} was successfully deleted`);
         },
-        (error : any) =>
-        {
+        (error: any) => {
           this.sendNotification('Something went wrong!');
         });
   }
@@ -274,17 +259,13 @@ export class AddTechnologyPage {
    * @method saveEntry
    * @return {None}
    */
-  saveEntry() : void
-  {
-    let name          : string = this.form.controls["name"].value,
-      description   : string    = this.form.controls["description"].value;
+  saveEntry(): void {
+    let name: string = this.form.controls['name'].value,
+      description: string = this.form.controls['description'].value;
 
-    if(this.isEdited)
-    {
+    if (this.isEdited) {
       this.updateEntry(name, description);
-    }
-    else
-    {
+    } else {
       this.createEntry(name, description);
     }
   }
@@ -299,10 +280,9 @@ export class AddTechnologyPage {
    * @method resetFields
    * @return {None}
    */
-  resetFields() : void
-  {
-    this.technologyName           = "";
-    this.technologyDescription    = "";
+  resetFields(): void {
+    this.technologyName = '';
+    this.technologyDescription = '';
   }
 
 
@@ -316,11 +296,10 @@ export class AddTechnologyPage {
    * @param message 	{String} 			Message to be displayed in the notification
    * @return {None}
    */
-  sendNotification(message : string)  : void
-  {
+  sendNotification(message: string): void {
     let notification = this.toastCtrl.create({
-      message       : message,
-      duration      : 3000
+      message: message,
+      duration: 3000
     });
     notification.present();
   }
